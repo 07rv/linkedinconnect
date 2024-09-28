@@ -39,12 +39,17 @@ class Connect:
             browser.get(url=url)
             time.sleep(self.time_sleep)
 
-            users = browser.find_elements(By.CLASS_NAME, 'org-people-profile-card__profile-info')
+            users = browser.find_elements(By.CLASS_NAME, 'org-people-profile-card__profile-card-spacing')
             for user in users:
                 userCardFooter = user.find_element(By.CLASS_NAME, 'ph3')
                 button = userCardFooter.find_element(By.TAG_NAME, "button")
 
-                print(button.get_attribute('innerHtml'))
+                buttonText = button.find_element(By.TAG_NAME, 'span').text
+
+                if buttonText == 'Connect':
+                    button.click()
+                    time.sleep(5)
+                    break
 
         except Exception as e:
             print(e)
