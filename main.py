@@ -1,4 +1,4 @@
 
 from connect import Connect
 
-Connect().login()
+Connect().CompanyConnect('google')

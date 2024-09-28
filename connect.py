@@ -10,18 +10,41 @@ browser = webdriver.Chrome()
 
 class Connect:
     user_name = os.getenv('USER_NAME')
-    password = os.getenv('USER_PASSWORD')
+    user_password = os.getenv('USER_PASSWORD')
     url = os.getenv('LINKEDIN_DOMAIN')
+    time_sleep = int(os.getenv('SLEEP_TIME_HIGH'))
+
+    def __init__(self):
+        pass
     
     def login(self):
         try:
-            browser.get(f'${self.url}')
+            url = f'{self.url}/login'
+            browser.get(url=url)
+            username = browser.find_element(By.ID, 'username')
+            username.send_keys(self.user_name)
+            password = browser.find_element(By.ID, 'password')
+            password.send_keys(self.user_password)
+            login_btn = browser.find_element(By.CLASS_NAME, 'btn__primary--large')
+            login_btn.click()
+        except Exception as e:
+            print(e)
+
+
+    def CompanyConnect(self,name):
+        try:
+            self.login()
+
+            url = f'{self.url}/company/{name}/people'
+            browser.get(url=url)
             time.sleep(self.time_sleep)
-            # username = browser.find_element(By.ID, 'session_key')
-            # username.send_keys(self.user_email)
-            # password = browser.find_element(By.ID, 'session_password')
-            # password.send_keys(self.user_password)
-            # login_btn = browser.find_element(By.CLASS_NAME, 'sign-in-form__submit-btn--full-width')
-            # login_btn.click()
+
+            users = browser.find_elements(By.CLASS_NAME, 'org-people-profile-card__profile-info')
+            for user in users:
+                userCardFooter = user.find_element(By.CLASS_NAME, 'ph3')
+                button = userCardFooter.find_element(By.TAG_NAME, "button")
+
+                print(button.get_attribute('innerHtml'))
+
         except Exception as e:
             print(e)
