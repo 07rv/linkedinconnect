@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import os
+import time
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -14,7 +15,8 @@ class Connect:
     
     def login(self):
         try:
-            browser.get(f'${self.url}/login')
+            browser.get(f'${self.url}')
+            time.sleep(self.time_sleep)
             # username = browser.find_element(By.ID, 'session_key')
             # username.send_keys(self.user_email)
             # password = browser.find_element(By.ID, 'session_password')
