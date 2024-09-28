@@ -48,8 +48,9 @@ class Connect:
 
                 if buttonText == 'Connect':
                     button.click()
+                    SendWithoutNote = browser.find_element(By.XPATH, "//div[@class='artdeco-modal artdeco-modal--layer-default send-invite']//button[2]")
+                    SendWithoutNote.click()
                     time.sleep(5)
-                    break
 
         except Exception as e:
             print(e)
