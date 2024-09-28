@@ -1,3 +1,5 @@
 .venv
 
+.env
+
 # python3 -m venv .venv  to create a virtual env
