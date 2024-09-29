@@ -20,7 +20,7 @@ class Connect:
     def __init__(self):
         pass
     
-    def login(self):
+    def __login(self):
         try:
             url = f'{self.url}/login'
             browser.get(url=url)
@@ -35,13 +35,9 @@ class Connect:
 
     def __CompanyConnect(self,name):
         try:
-            df = pd.read_csv('data/m_company.csv')
-            self.login()
-
             url = f'{self.url}/company/{name}/people'
             browser.get(url=url)
             time.sleep(self.time_sleep)
-
 
             prev_height = -1 
             max_scrolls = 3
@@ -76,9 +72,10 @@ class Connect:
     def CompanyConnect(self):
         try:
             df = pd.read_csv('data/m_company.csv')
+            self.__login()
             for index, row in df.iterrows():
                 company = row['Company']
-                self.CompanyConnect(company)
+                self.__CompanyConnect(company)
         except Exception as e:
             print(e)
         

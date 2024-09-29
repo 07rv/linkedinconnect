@@ -20,7 +20,7 @@ class Connect:
     def __init__(self):
         pass
     
-    def login(self):
+    def __login(self):
         try:
             url = f'{self.url}/login'
             browser.get(url=url)
@@ -33,28 +33,36 @@ class Connect:
         except Exception as e:
             print(e)
 
-    def __PeopleConnect(self,name):
+    def __PeopleConnect(self,name, page_limit = 3):
         try:
-            df = pd.read_csv('data/m_company.csv')
-            # self.login()
-
-            # url = f'{self.url}/company/{name}/people'
-            # browser.get(url=url)
-            # time.sleep(self.time_sleep)
-
+            url = f'{self.url}/search/results/people/?keywords=/{name}'
+            browser.get(url=url)
 
             prev_height = -1 
             max_scrolls = 3
             scroll_count = 0
+            while scroll_count < max_scrolls:
+                browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                time.sleep(3)
+                new_height = browser.execute_script("return document.body.scrollHeight")
+                if new_height == prev_height:
+                    break
+                prev_height = new_height
+                scroll_count += 1
 
-            # while scroll_count < max_scrolls:
-            #     browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            #     time.sleep(3)
-            #     new_height = browser.execute_script("return document.body.scrollHeight")
-            #     if new_height == prev_height:
-            #         break
-            #     prev_height = new_height
-            #     scroll_count += 1
+            totalPages = browser.find_elements(By.CLASS_NAME, 'artdeco-pagination__indicator--number')
+            if len(totalPages) > 0:
+                totalPages = totalPages[-1]
+                totalPages = totalPages.find_element(By.TAG_NAME, "span").text
+
+            for page in range(1, min(totalPages+1, page_limit)):
+                url = f'{self.url}/search/results/people/?keywords=/{name}/&page={page}'
+            #     browser.get(url=url)
+            #     time.sleep(self.time_sleep)
+
+
+
+
 
             # users = WebDriverWait(browser, 10).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'org-people-profile-card__profile-card-spacing')))
 
@@ -76,9 +84,10 @@ class Connect:
     def PeopleConnect(self):
         try:
             df = pd.read_csv('data/m_people.csv')
+            self.__login()
             for index, row in df.iterrows():
                 name = row['Name']
-                self.PeopleConnect(name)
+                self.__PeopleConnect(name)
         except Exception as e:
             print(e)
         
