@@ -1,4 +1,4 @@
 
-from connect import Connect
+from peopleConnect import Connect
 
-Connect().CompanyConnect('google')
+Connect().PeopleConnect()

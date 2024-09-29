@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import pandas as pd
 import os
 import time
 from dotenv import load_dotenv
@@ -32,9 +33,9 @@ class Connect:
         except Exception as e:
             print(e)
 
-
-    def CompanyConnect(self,name):
+    def __CompanyConnect(self,name):
         try:
+            df = pd.read_csv('data/m_company.csv')
             self.login()
 
             url = f'{self.url}/company/{name}/people'
@@ -71,3 +72,13 @@ class Connect:
 
         except Exception as e:
             print(e)
+
+    def CompanyConnect(self):
+        try:
+            df = pd.read_csv('data/m_company.csv')
+            for index, row in df.iterrows():
+                company = row['Company']
+                self.CompanyConnect(company)
+        except Exception as e:
+            print(e)
+        
