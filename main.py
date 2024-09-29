@@ -1,23 +1,23 @@
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from oauth import get_current_user, create_access_token
-from schemas import User
 
-users_db = {
-    "user1": User(username="user1", password="password1"),
-    "user2": User(username="user2", password="password2"),
-}
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 
 app = FastAPI()
 @app.post("/token")
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     try:
-        user = users_db.get(form_data.username)
+        USERNAME = os.getenv('USER_NAME_LOGIN')
+        USERPASSWORD = os.getenv('USER_PASSWORD_LOGIN')
         
-        if user is None or user.password != form_data.password:
+        if USERNAME != form_data.username or USERPASSWORD != form_data.password:
             raise HTTPException(status_code=400, detail="Incorrect username or password")
         
-        access_token = create_access_token(data={"sub": {"user" :user.username}})
+        access_token = create_access_token(data={"sub": {"user" : USERNAME}})
         return {"access_token": access_token, "token_type": "bearer"}
     except Exception as e:
         print(e)
