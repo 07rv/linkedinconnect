@@ -57,8 +57,15 @@ class Connect:
 
             for page in range(1, min(totalPages+1, page_limit)):
                 url = f'{self.url}/search/results/people/?keywords=/{name}/&page={page}'
-            #     browser.get(url=url)
-            #     time.sleep(self.time_sleep)
+                browser.get(url=url)
+
+                peoples = browser.find_elements(By.CLASS_NAME, 'reusable-search__result-container')
+                
+                for people in peoples:
+                    button = people.find_element(By.TAG_NAME, 'button')
+                    buttonText = button.find_element(By.TAG_NAME, 'span').text
+                    print(buttonText)
+
 
 
 
