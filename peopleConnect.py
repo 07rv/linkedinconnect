@@ -53,18 +53,26 @@ class Connect:
             totalPages = browser.find_elements(By.CLASS_NAME, 'artdeco-pagination__indicator--number')
             if len(totalPages) > 0:
                 totalPages = totalPages[-1]
-                totalPages = totalPages.find_element(By.TAG_NAME, "span").text
+                totalPages = int(totalPages.find_element(By.TAG_NAME, "span").text)
 
             for page in range(1, min(totalPages+1, page_limit)):
                 url = f'{self.url}/search/results/people/?keywords=/{name}/&page={page}'
                 browser.get(url=url)
+                time.sleep(3)
 
                 peoples = browser.find_elements(By.CLASS_NAME, 'reusable-search__result-container')
                 
                 for people in peoples:
                     button = people.find_element(By.TAG_NAME, 'button')
-                    buttonText = button.find_element(By.TAG_NAME, 'span').text
-                    print(buttonText)
+                    try:
+                        buttonText = button.find_element(By.TAG_NAME, 'span').text
+                        if buttonText == 'Connect':
+                            button.click()
+                            SendWithoutNote = browser.find_element(By.XPATH, "//div[@class='artdeco-modal artdeco-modal--layer-default send-invite']//button[2]")
+                            SendWithoutNote.click()
+                            time.sleep(5)
+                    except Exception as e:
+                        print("some exception has occured")
 
 
 
