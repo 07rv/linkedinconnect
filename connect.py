@@ -1,5 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import os
 import time
 from dotenv import load_dotenv
@@ -39,7 +41,22 @@ class Connect:
             browser.get(url=url)
             time.sleep(self.time_sleep)
 
-            users = browser.find_elements(By.CLASS_NAME, 'org-people-profile-card__profile-card-spacing')
+
+            prev_height = -1 
+            max_scrolls = 3
+            scroll_count = 0
+
+            while scroll_count < max_scrolls:
+                browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                time.sleep(3)
+                new_height = browser.execute_script("return document.body.scrollHeight")
+                if new_height == prev_height:
+                    break
+                prev_height = new_height
+                scroll_count += 1
+
+            users = WebDriverWait(browser, 10).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'org-people-profile-card__profile-card-spacing')))
+
             for user in users:
                 userCardFooter = user.find_element(By.CLASS_NAME, 'ph3')
                 button = userCardFooter.find_element(By.TAG_NAME, "button")
