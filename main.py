@@ -17,7 +17,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         if USERNAME != form_data.username or USERPASSWORD != form_data.password:
             raise HTTPException(status_code=400, detail="Incorrect username or password")
         
-        access_token = create_access_token(data={"sub": {"user" : USERNAME}})
+        access_token = create_access_token(data={"sub": USERNAME})
         return {"access_token": access_token, "token_type": "bearer"}
     except Exception as e:
         print(e)
