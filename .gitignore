@@ -1,6 +1,7 @@
 .venv
 
 .env
+.envp
 
 __pycache__
 
